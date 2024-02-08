@@ -474,56 +474,46 @@ end
 SWEP.InvalidateSelectIcon = false
 
 function SWEP:DrawWeaponSelection(x, y, w, h, a)
-    if self.EntitySelectIcon then
-        if !self.Mat_Select then
-            self.Mat_Select = Material("entities/" .. self:GetClass() .. ".png")
-        end
 
-        surface.SetDrawColor(255, 255, 255, a)
-        surface.SetMaterial(self.Mat_Select)
-
-        if w > h then
-            y = y - ((w - h) / 2)
-        end
-
-        surface.DrawTexturedRect(x, y, w, w)
-        return
-    elseif self.CustomSelectIcon then
-        surface.SetDrawColor(255, 255, 255, a)
-        surface.SetMaterial(self.CustomSelectIcon)
-
-        h = w / 2
-
-         y = y + (h / 8)
-
-        surface.DrawTexturedRect(x, y, w, h)
-        return
+    if !self.Mat_Select then
+        self.Mat_Select = Material("entities/" .. self:GetClass() .. ".png")
     end
 
-    local selecticon = self.AutoSelectIcon
+    surface.SetDrawColor(255, 255, 255, a)
+    surface.SetMaterial(self.Mat_Select)
 
-    if !selecticon or self.InvalidateSelectIcon then
-        self:DoIconCapture()
-
-        local filename = ARC9.PresetPath .. self:GetPresetBase() .. "_icon." .. ARC9.PresetIconFormat
-        selecticon = Material("data/" .. filename, "smooth")
-    end
-
-    if !selecticon then return end
-
-    self.WepSelectIcon = selecticon:GetTexture("$basetexture")
-    if self:GetJammed() then  
-        surface.SetDrawColor(200, 50, 50, a)
-    else
-        surface.SetDrawColor(255, 255, 255, a)
-    end
-
-    surface.SetMaterial(selecticon)
     if w > h then
         y = y - ((w - h) / 2)
     end
-    surface.DrawTexturedRect(x, y, w, w)
-    // surface.DrawTexturedRectUV(x, y, w, w, 0, 0, 1, 1)
+
+    surface.DrawTexturedRect(x + w / 4, y + w / 4, w / 2, w / 2)
+    return
+
+
+    -- local selecticon = self.AutoSelectIcon
+
+    -- if !selecticon or self.InvalidateSelectIcon then
+    --     -- self:DoIconCapture()
+
+    --     -- local filename = ARC9.PresetPath .. self:GetPresetBase() .. "_icon." .. ARC9.PresetIconFormat
+    --     -- selecticon = Material("entities/" .. filename .. ".png", "smooth")
+    -- end
+
+    -- if !selecticon then return end
+
+    -- self.WepSelectIcon = selecticon:GetTexture("$basetexture")
+    -- if self:GetJammed() then  
+    --     surface.SetDrawColor(200, 50, 50, a)
+    -- else
+    --     surface.SetDrawColor(255, 255, 255, a)
+    -- end
+
+    -- surface.SetMaterial(selecticon)
+    -- if w > h then
+    --     y = y - ((w - h) / 2)
+    -- end
+    -- surface.DrawTexturedRect(x, y, w, w)
+    -- // surface.DrawTexturedRectUV(x, y, w, w, 0, 0, 1, 1)
 end
 
 SWEP.AutoSelectIcon = nil

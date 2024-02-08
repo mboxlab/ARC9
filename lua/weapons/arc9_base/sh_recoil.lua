@@ -170,15 +170,15 @@ do
     end
 
     local weirdfix = true
-
+    local engine_TickInterval = engine.TickInterval
     function SWEP:ThinkVisualRecoil()
         --if SERVER and !self.PhysicalVisualRecoil then return end
 
         local MAGIC1 = 210
         local MAGIC2 = 210
         if weirdfix then
-            MAGIC1 = 210 / (engine.TickInterval() / 0.015)
-            MAGIC2 = 210 / (engine.TickInterval() / 0.015)
+            MAGIC1 = 210 / (engine_TickInterval() / 0.015)
+            MAGIC2 = 210 / (engine_TickInterval() / 0.015)
         end
 
         local ft = FrameTime()

@@ -26,38 +26,38 @@ hook.Add( "entity_killed", "entity_killed_example", function( data )
     end
 end )
 
-timer.Simple(10, function() -- tfa does same thing, no need to copy (timer here cuz tfa loads after arc9)
-    if !TFA then 
-        -- code stolen from wiki
-        local cheats = GetConVar("sv_cheats")
-        local timeScale = GetConVar("host_timescale")
+-- timer.Simple(10, function() -- tfa does same thing, no need to copy (timer here cuz tfa loads after arc9)
+--     if !TFA then 
+--         -- code stolen from wiki
+--         local cheats = GetConVar("sv_cheats")
+--         local timeScale = GetConVar("host_timescale")
 
-        hook.Add("EntityEmitSound", "ARC9_TimeWarpSounds", function(t)
-            local p = t.Pitch
+--         hook.Add("EntityEmitSound", "ARC9_TimeWarpSounds", function(t)
+--             local p = t.Pitch
             
-            if game.GetTimeScale() != 1 then
-                p = p * game.GetTimeScale()
-            end
+--             if game.GetTimeScale() != 1 then
+--                 p = p * game.GetTimeScale()
+--             end
 
-            if timeScale then
-                local ts = timeScale:GetFloat()
-                if isnumber(ts) then
-                    if ts != 1 and cheats:GetBool() then
-                        p = p * ts
-                    end
-                end
-            end
+--             if timeScale then
+--                 local ts = timeScale:GetFloat()
+--                 if isnumber(ts) then
+--                     if ts != 1 and cheats:GetBool() then
+--                         p = p * ts
+--                     end
+--                 end
+--             end
             
-            if p != t.Pitch then
-                t.Pitch = math.Clamp(p, 0, 255)
-                return true
-            end
+--             if p != t.Pitch then
+--                 t.Pitch = math.Clamp(p, 0, 255)
+--                 return true
+--             end
             
-            if CLIENT and engine.GetDemoPlaybackTimeScale() != 1 then
-                t.Pitch = math.Clamp(t.Pitch * engine.GetDemoPlaybackTimeScale(), 0, 255)
-                return true
-            end
+--             if CLIENT and engine.GetDemoPlaybackTimeScale() != 1 then
+--                 t.Pitch = math.Clamp(t.Pitch * engine.GetDemoPlaybackTimeScale(), 0, 255)
+--                 return true
+--             end
             
-        end)
-    end
-end)
+--         end)
+--     end
+-- end)

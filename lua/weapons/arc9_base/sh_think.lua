@@ -53,8 +53,12 @@ local cvarGetBool = FindMetaTable("ConVar").GetBool
 function SWEP:Think()
     local owner = entityGetOwner(self)
 
-    if not IsValid(owner) then return end
-    if owner:IsNPC() then return end
+    if not IsValid(owner) then
+        return
+    end
+    if owner:IsNPC() then
+        return
+    end
 
     local swepDt = self.dt
     local now = CurTime()
@@ -129,7 +133,7 @@ function SWEP:Think()
         -- end
 
         -- If we have stopped shooting, play the aftershotparticle
-        if swepDt.AfterShot and (IsFirstTimePredicted() or isSingleplayer) then
+        if swepDt.AfterShot and IsFirstTimePredicted() then
             local delay = 60 / swepGetProcessedValue(self, "RPM")
 
             if weaponGetNextPrimaryFire(self) + delay + swepGetProcessedValue(self, "AfterShotParticleDelay") < now then
@@ -169,7 +173,6 @@ function SWEP:Think()
     end
 
     if shouldRunPredicted then
-        swepThinkLean(self)
         swepThinkFiremodes(self)
         swepThinkInspect(self)
     end
@@ -192,7 +195,7 @@ function SWEP:Think()
     self:ProcessTimers()
 
     local holdingProp = owner.ARC9_HoldingProp
-    if SERVER and holdingProp and (!IsValid(holdingProp) or !holdingProp:IsPlayerHolding()) then
+    if SERVER and holdingProp and (not IsValid(holdingProp) or not holdingProp:IsPlayerHolding()) then
         owner.ARC9_HoldingProp = nil
         net.Start("arc9_stoppickup")
         net.Send(owner)
@@ -200,7 +203,7 @@ function SWEP:Think()
     end
 
     if CLIENT then
-        if !self.LoadedPreset then
+        if not self.LoadedPreset then
             self.LoadedPreset = true
 
             timer.Simple(0.06, function() -- idk

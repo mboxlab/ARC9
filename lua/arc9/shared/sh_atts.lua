@@ -123,7 +123,7 @@ function ARC9.LoadAtts()
         include(searchdir_bulk .. filename)
     end
 
-    print("ARC9 Registered " .. tostring(ARC9.Attachments_Count) .. " attachments. (" .. Attachments_LuaCount .. " lua files total, " .. Attachments_BulkCount .. " bulk/" .. Attachments_RegularCount .. " regular)")
+    -- print("ARC9 Registered " .. tostring(ARC9.Attachments_Count) .. " attachments. (" .. Attachments_LuaCount .. " lua files total, " .. Attachments_BulkCount .. " bulk/" .. Attachments_RegularCount .. " regular)")
 
     ARC9.Attachments_Bits = math.min(math.ceil(math.log(ARC9.Attachments_Count + 1, 2)), 32)
 

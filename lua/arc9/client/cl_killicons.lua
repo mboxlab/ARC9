@@ -7,7 +7,7 @@ local killiconmat = Material("arc9/arc9_logo.png", "mips smooth")
 local arc9_killfeed_enable = GetConVar("arc9_killfeed_enable")
 local arc9_killfeed_dynamic = GetConVar("arc9_killfeed_dynamic")
 ARC9NEWKillicondraw = function(x, y, name, alpha)
-    if !arc9_killfeed_enable:GetBool() then
+    if true then
         return ARC9OLDKilliconDraw(x, y, name, alpha)
     end
 

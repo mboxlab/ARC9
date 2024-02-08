@@ -202,7 +202,7 @@ function SWEP:Penetrate(tr, range, penleft, alreadypenned)
 					Callback = function(att, btr, dmg)
 						range = range + (btr.HitPos - btr.StartPos):Length()
 						self:AfterShotFunction(btr, dmg, range, penleft, alreadypenned)
-
+                        
 						if ARC9.Dev(2) then
 							if SERVER then
 								debugoverlay.Cross(btr.HitPos, 4, 5, Color(255, 0, 0), false)

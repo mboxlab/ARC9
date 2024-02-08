@@ -76,14 +76,14 @@ function SWEP:PreDrawViewModel()
     end
 
     local custdelta = self.CustomizeDelta
-
+    
     if custdelta > 0 then
-        if arc9_cust_blur:GetBool() then
-            blurtarget = 5 * custdelta
-        end
+        -- if arc9_cust_blur:GetBool() then
+        --     blurtarget = 5 * custdelta
+        -- end
 
         local scrw, scrh = ScrW(), ScrH()
-
+        
         cam.Start2D()
             surface.SetDrawColor(15, 15, 15, 180 * custdelta)
             surface.DrawRect(0, 0, scrw, scrh)
@@ -101,9 +101,9 @@ function SWEP:PreDrawViewModel()
         cam.End2D()
     end
 
-    if (shouldrtblur and blurenable) or (custdelta > 0 and blurtarget > 0) then
-        DrawBokehDOF(bluramt, 1, 0)
-    end
+    -- if (shouldrtblur and blurenable) or (custdelta > 0 and blurtarget > 0) then
+    --     DrawBokehDOF(bluramt, 1, 0)
+    -- end
 
     bluramt = math.Approach(bluramt, blurtarget, FrameTime() * 10)
 
@@ -268,6 +268,6 @@ function SWEP:PostDrawViewModel()
     end
     cam.End3D()
 
-    if arc9_fx_adsblur:GetBool() and self:GetSight().Blur != false and !self.Peeking then arc9toytown(self:GetSightAmount()) end -- cool ass blur
+    -- if arc9_fx_adsblur:GetBool() and self:GetSight().Blur != false and !self.Peeking then arc9toytown(self:GetSightAmount()) end -- cool ass blur
     -- render.UpdateFullScreenDepthTexture()
 end
