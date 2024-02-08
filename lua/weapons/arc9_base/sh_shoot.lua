@@ -331,6 +331,11 @@ function SWEP:PrimaryAttack()
     end
 
     self:DoPrimaryAttack()
+		
+	if self.RecentMelee then
+		self.RecentMelee = nil
+	end
+
 end
 
 function SWEP:DoPrimaryAttack()

@@ -115,6 +115,7 @@ SWEP.TPIKParentToSpine4 = nil -- TPIK makes VM origin on right hand (which is lo
 SWEP.TPIKforcelefthand = nil -- TPIK does not do left hand when you have one of this holdtypes: slam magic pistol normal. Set to true to still do lhand tpik for those
 SWEP.TPIKforcenoreload = false -- TPIK does not force activate during reload
 SWEP.TPIKnolefthand = false -- Force no TPIK left hand
+SWEP.TPIKNoSprintAnim = nil -- Makes weapon wm be in idle while sprinting (use when animated sprint looks too bad from outside)
 SWEP.NoTPIKVMPos = false -- TPIK position is not affected by viewmodel position (Local player only)
 SWEP.Material = ""
 
@@ -594,6 +595,7 @@ SWEP.BashImpact = true -- Creates a Impact effect that leaves a bullet hole.
 SWEP.BashSpeed = 1
 
 SWEP.BashWhileSprint = false -- Unlike ShootWhileSprint, this will not require transitioning out of sprint state (and waiting the sprinttofire delay)
+SWEP.BashCancelsReload = nil -- If bashing should immediately cancel the reload
 
 SWEP.BashThirdArmAnimation = {
         rig = "models/weapons/arc9/lhik/c_thirdarm_pdw.mdl",
@@ -1084,15 +1086,15 @@ SWEP.CustomizeRotateAnchor = Vector(21.5, -4.27, -5.23)
 SWEP.CustomizeSnapshotFOV = 90
 SWEP.CustomizeSnapshotPos = Vector(0, 0, 0)
 SWEP.CustomizeSnapshotAng = Angle(0, 0, 0)
-SWEP.CustomizeNoRotate = false
+SWEP.CustomizeNoRotate = nil
 
 SWEP.BipodPos = Vector(0, 0, 0)
 SWEP.BipodAng = Angle(0, 0, 0)
 
-SWEP.CanPeek = true -- Allow the weapon to use the Peek function.
+SWEP.CantPeek = nil -- set to true if you dont want peeking on this gnu
 SWEP.PeekPos = Vector(-1.5, 3, -4.5)
 SWEP.PeekAng = Angle(0, 0.4, -35)
-SWEP.PeekCrosshair = true -- Displays the crosshair when using Peek.
+SWEP.NoPeekCrosshair = nil -- Not displays peek crosshair even if its enabled
 
 SWEP.HeightOverBore = 1
 
@@ -1143,8 +1145,7 @@ SWEP.TTTAmmoType = nil
 
 -------------------------- Aim Assist
 
-SWEP.AimAssist = true -- Allow the weapon to utilize aim assist.
-SWEP.AimAssistStrength = 1 -- Multiplier on how strong the aim assist should be.
+SWEP.NoAimAssist = nil -- Disable this weapon from utilizing aim assist.
 
 -------------------------- ATTACHMENTS
 

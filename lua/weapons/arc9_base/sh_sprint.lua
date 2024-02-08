@@ -1,5 +1,7 @@
 function SWEP:GetSprintToFireTime()
-    return self:GetProcessedValue("SprintToFireTime", true)
+    local owner = self:GetOwner()
+    local slidingmult = (owner.GetSliding and owner:GetSliding()) and 0.66 or 1
+    return self:GetProcessedValue("SprintToFireTime", true) * slidingmult -- Incorrectly uses a time as a multiplier! Preserved for legacy behavior
 end
 
 function SWEP:GetTraverseSprintToFireTime()
@@ -43,6 +45,7 @@ function SWEP:GetIsSprintingCheck()
         return false
     end
     if self:GetInSights() then return false end
+    if self:GetCustomize() then return false end
     -- if self:GetIsNearWall() then return true end
     if !owner:KeyDown(IN_SPEED) then return false end
     if !owner:OnGround() or owner:GetMoveType() == MOVETYPE_NOCLIP then return false end
@@ -59,6 +62,8 @@ function SWEP:GetIsSprintingCheck()
     if self:GetGrenadePrimed() then
         return false
     end
+
+    if owner.GetSliding and owner:GetSliding() then return false end
 
     if owner:Crouching() then return false end
 
@@ -81,7 +86,7 @@ function SWEP:EnterSprint()
             self:PlayAnimation("idle")
         else
             local anim = self:TranslateAnimation("enter_sprint")
-            local mult = self:GetProcessedValue("SprintToFireTime", true) -- Incorrectly uses a time as a multiplier! Preserved for legacy behavior
+            local mult = self:GetSprintToFireTime()
             if self:GetAnimationEntry(anim).NoStatAffectors then
                 mult = 1
             end
@@ -98,7 +103,7 @@ function SWEP:ExitSprint()
             self:PlayAnimation("idle")
         else
             local anim = self:TranslateAnimation("exit_sprint")
-            local mult = self:GetProcessedValue("SprintToFireTime", true) -- Incorrectly uses a time as a multiplier! Preserved for legacy behavior
+            local mult = self:GetSprintToFireTime()
             if self:GetAnimationEntry(anim).NoStatAffectors then
                 mult = 1
             end
@@ -129,14 +134,14 @@ function SWEP:ThinkSprint()
 
     if sprinting and !self:GetPrimedAttack() then
         if amt < 1 then
-            amt = math.Approach(amt, 1, FrameTime() / self:GetProcessedValue("SprintToFireTime", true))
+            amt = math.Approach(amt, 1, FrameTime() / self:GetSprintToFireTime())
         end
         -- if self:GetTraversalSprint() then
         --     ts_amt = math.Approach(ts_amt, 1, FrameTime() / (self:GetTraverseSprintToFireTime()))
         -- end
     else
         if amt > 0 then
-            amt = math.Approach(amt, 0, FrameTime() / self:GetProcessedValue("SprintToFireTime", true))
+            amt = math.Approach(amt, 0, FrameTime() / self:GetSprintToFireTime())
         end
     end
 

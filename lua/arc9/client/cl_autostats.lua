@@ -103,9 +103,6 @@ ARC9.AutoStatsMains = {
     ["RecoilModifierCap"] = {false, true},
     ["BashSpeed"] = {false, false},
     ["RecoilPerShot"] = {false, true},
-    ["CanPeek"] = {false, true},
-    ["AimAssist"] = {false, true},
-    ["AimAssistStrength"] = {true, false},
 }
 
 ARC9.AutoStatsOperations = {
@@ -205,6 +202,7 @@ ARC9.AutoStatsConditions = {
     ["BlindFire"] = "While Blind Firing",
     ["UBGL"] = "In UBGL",
     ["Bipod"] = "On Bipod",
+	["Sprint"] = "when Sprinting",
 }
 
 function ARC9.GetProsAndCons(atttbl, weapon)

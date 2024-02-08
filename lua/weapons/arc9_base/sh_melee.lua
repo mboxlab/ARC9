@@ -5,10 +5,12 @@ local vmaxs, vmins = Vector(2, 2, 2), Vector(-2, -2, -2)
 
 function SWEP:MeleeAttack(bypass, bash2)
     if !bypass then
-        if self:StillWaiting() then return end
+		if !self:GetProcessedValue("BashCancelsReload", true) and self:StillWaiting() then return end
         if !self:GetProcessedValue("BashWhileSprint", true) and self:SprintLock() then return end
     end
 
+	self:CancelReload()
+	
     self:CallOnClient("CallNonTPIKAnim", "AnimMelee")
 
     local soundtab1 = {
@@ -88,6 +90,9 @@ function SWEP:MeleeAttack(bypass, bash2)
     else
         self:MeleeAttackShoot(bash2, true)
     end
+
+	self.RecentMelee = true
+
 end
 
 local vmaxs2, vmins2 = Vector(2, 2, 2), Vector(-2, -2, -2)
@@ -196,26 +201,27 @@ end
 function SWEP:ThinkMelee()
     local owner = self:GetOwner()
 
-    if !self:GetGrenadePrimed() then
-
-        if owner:KeyDown(IN_ATTACK) and self:GetProcessedValue("PrimaryBash", true) then
-            self:MeleeAttack()
-        end
-
-        if owner:KeyDown(IN_ATTACK2) and self:GetProcessedValue("SecondaryBash", true) then
-            self:MeleeAttack()
-        end
-
-        if owner:KeyDown(ARC9.IN_MELEE) and self:GetProcessedValue("Bash", true) and !self:GetInSights() then
-            self:MeleeAttack()
-        end
-
-    end
-
     local prebash = self:GetProcessedValue("PreBashTime") / self:GetProcessedValue("BashSpeed")
 
     if self:GetBash2() then
         prebash = self:GetProcessedValue("PreBash2Time")
+    end
+
+    if !self:GetGrenadePrimed() then
+		waituntilbashagain = self:GetLastMeleeTime() + prebash + self:GetProcessedValue("PostBashTime") <= CurTime()
+		
+        if owner:KeyDown(IN_ATTACK) and self:GetProcessedValue("PrimaryBash", true) and waituntilbashagain then
+            self:MeleeAttack()
+        end
+
+        if owner:KeyDown(IN_ATTACK2) and self:GetProcessedValue("SecondaryBash", true) and waituntilbashagain then
+            self:MeleeAttack()
+        end
+
+        if owner:KeyDown(ARC9.IN_MELEE) and self:GetProcessedValue("Bash", true) and !self:GetInSights() and waituntilbashagain then
+            self:MeleeAttack()
+        end
+
     end
 
     if self:GetInMeleeAttack() and self:GetLastMeleeTime() + prebash <= CurTime() then
