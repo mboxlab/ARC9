@@ -175,14 +175,14 @@ function SWEP:GetHiddenBones(wm)
         hide = true
     end
 
-    local hidefp = self:GetProcessedValue("ReloadHideBonesFirstPerson", true)
+    local hidefp = self:GetValue("ReloadHideBonesFirstPerson")
 
     if wm or hidefp then
         hide = true
     end
 
-    local hidebones = self:GetProcessedValue("HideBones", true)
-    local reloadhidebones = self:GetProcessedValue("ReloadHideBoneTables", true)
+    local hidebones = self:GetValue("HideBones")
+    local reloadhidebones = self:GetValue("ReloadHideBoneTables")
 
     local bones = {}
 
@@ -192,7 +192,7 @@ function SWEP:GetHiddenBones(wm)
 
     local index = self:GetHideBoneIndex()
 
-    if hidefp or (self:GetAnimLockTime() >= CurTime() and reloadhidebones and self:ShouldTPIK() and wm) and index != 0 then
+    if hidefp then
         for _, bone in ipairs(reloadhidebones[index] or {}) do
             bones[bone] = true
         end

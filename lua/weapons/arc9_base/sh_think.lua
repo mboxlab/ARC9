@@ -41,6 +41,7 @@ local swepThinkCustomize = SWEP.ThinkCustomize
 local swepRunHook = SWEP.RunHook
 local swepThinkThirdArm = SWEP.ThinkThirdArm
 local swepThinkPeek = SWEP.ThinkPeek
+local swepGetValue = SWEP.GetValue
 
 local WEAPON = FindMetaTable("Weapon")
 local weaponSetNextPrimaryFire = WEAPON.SetNextPrimaryFire
@@ -94,8 +95,7 @@ function SWEP:Think()
 
         local currentFiremode = swepGetCurrentFiremode(self)
         local notRunawayBurst = not swepGetProcessedValue(self, "RunawayBurst", true)
-        local postBurstDelay = now + swepGetProcessedValue(self, "PostBurstDelay")
-
+        local postBurstDelay = now + swepGetValue(self,"PostBurstDelay")
         if notPressedAttack then
             self:SetNeedTriggerPress(false)
             if currentFiremode > 1 and notRunawayBurst and swepDt.BurstCount > 0 then
@@ -161,7 +161,6 @@ function SWEP:Think()
             -- Done (no GetVM)
             swepThinkBipod(self)
             swepThinkSights(self)
-            swepThinkMelee(self)
             self:ThinkUBGL()
             swepThinkGrenade(self)
             self:ThinkTriggerSounds()

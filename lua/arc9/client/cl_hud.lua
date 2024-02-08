@@ -5,14 +5,14 @@ local hide = {
     ["CHudSecondaryAmmo"] = true,
     ["CHudGMod"] = false,
 }
+hook.Remove("HUDShouldDraw", "ARC9_HideHUD")
+-- hook.Add("HUDShouldDraw", "ARC9_HideHUD", function(name)
+--     if !IsValid(LocalPlayer()) then return end
 
-hook.Add("HUDShouldDraw", "ARC9_HideHUD", function(name)
-    if !IsValid(LocalPlayer()) then return end
-
-    if ARC9.ShouldDrawHUD() then
-        if hide[name] then return false end
-    end
-end)
+--     if ARC9.ShouldDrawHUD() then
+--         if hide[name] then return false end
+--     end
+-- end)
 
 local arc9_hud_scale = GetConVar("arc9_hud_scale")
 ARC9.ScreenScale = function(size)

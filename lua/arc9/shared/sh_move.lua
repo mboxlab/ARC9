@@ -11,8 +11,7 @@ function ARC9.Move(ply, mv, cmd)
     local basespd = (Vector(cmd:GetForwardMove(), cmd:GetUpMove(), cmd:GetSideMove())):Length()
     basespd = math.min(basespd, mv:GetMaxClientSpeed())
 
-    local mult = wpn:GetProcessedValue("Speed", nil, 1)
-
+    local mult = wpn.Speed
     if wpn:GetSightAmount() > 0 then
         if ply:KeyDown(IN_SPEED) then
             mult = mult / Lerp(wpn:GetSightAmount(), 1, ply:GetRunSpeed() / ply:GetWalkSpeed()) * (wpn:HoldingBreath() and 0.5 or 1)
@@ -233,10 +232,9 @@ function ARC9.StartCommand(ply, cmd)
 
         local diff_p = ARC9.ClientRecoilUp * m * cft / timestep
         local diff_y = ARC9.ClientRecoilSide * m * cft / timestep
-
-        ARC9.RecoilRise = ARC9.RecoilRise + Angle(diff_p, diff_y, 0)
-
-        local recreset = ARC9.RecoilRise * wpn:GetProcessedValue("RecoilAutoControl", true) * cft * 2
+        ARC9.RecoilRise.p = ARC9.RecoilRise.p + diff_p
+        ARC9.RecoilRise.y = ARC9.RecoilRise.y + diff_y
+        local recreset = ARC9.RecoilRise * wpn:GetValue("RecoilAutoControl") * cft * 2
 
         if math.abs(recreset.p) > 1e-5 then
             eyeang.p = eyeang.p - recreset.p

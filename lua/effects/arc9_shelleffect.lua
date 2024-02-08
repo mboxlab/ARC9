@@ -29,11 +29,7 @@ function EFFECT:Init(data)
     else
         mdl = LocalPlayer():GetViewModel()
 
-        if ent:ShouldTPIK() then
-            self.VMContext = false
-        else
-            table.insert(ent.ActiveEffects, self)
-        end
+        table.insert(ent.ActiveEffects, self)
     end
 
     if !IsValid(ent) then self:Remove() return end

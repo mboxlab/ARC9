@@ -12,7 +12,6 @@ function SWEP:DrawWorldModel()
     if IsValid(owner) and owner:GetActiveWeapon() == self then -- gravgun moment
         self:DoBodygroups(true)
         self:DrawLasers(true)
-        self:DoTPIK()
         self:DrawFlashlightsWM()
     end
 end

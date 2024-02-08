@@ -3,7 +3,7 @@ local whitecolo = Color(255, 255, 255)
 local colrcvar = GetConVar("arc9_reflex_r")
 local colgcvar = GetConVar("arc9_reflex_g")
 local colbcvar = GetConVar("arc9_reflex_b")
-
+local black = Color(0, 0, 0)
 function SWEP:DoHolosight(mdl, atttbl)
     if self:GetSightAmount() <= 0 and !self:GetCustomize() and !atttbl.HoloSightAlwaysOn then return end
     if ARC9.OverDraw then return end
@@ -78,7 +78,7 @@ function SWEP:DoHolosight(mdl, atttbl)
         local col = atttbl.HoloSightColor or whitecolo
 
         if atttbl.HoloSightColorable then
-            col = Color(0, 0, 0)
+            col = black
             col.r = colrcvar:GetFloat()
             col.g = colgcvar:GetFloat()
             col.b = colbcvar:GetFloat()

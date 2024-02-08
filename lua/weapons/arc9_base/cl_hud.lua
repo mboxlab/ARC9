@@ -15,13 +15,13 @@ local arc9_crosshair_peek = GetConVar("arc9_crosshair_peek")
 function SWEP:ShouldDrawCrosshair()
     if self:GetInSights() then
 
-        if (self.Peeking and !self:GetProcessedValue("NoPeekCrosshair", true) and arc9_crosshair_peek:GetFloat() == 1) then
+        if (self.Peeking and not self:GetProcessedValue("NoPeekCrosshair", true) and arc9_crosshair_peek:GetFloat() == 1) then
 			return true
 		end
 
 		return self:GetSight().CrosshairInSights
     end
-    if (!self:GetProcessedValue("Crosshair", true) and !arc9_crosshair_force:GetBool()) and !ARC9.ShouldThirdPerson() then return false end
+    if (not self:GetProcessedValue("Crosshair", true) and not arc9_crosshair_force:GetBool()) and not ARC9.ShouldThirdPerson() then return false end
     if self:GetCustomize() then return false end
 
     return true
@@ -33,9 +33,8 @@ local function drawshadowrect(x, y, w, h, col)
     surface.SetDrawColor(0, 0, 0, col.a * 100 / 150)
     surface.DrawOutlinedRect(x - 1, y - 1, w + 2, h + 2)
 end
-
+local col = color_white
 local lastgap = 0
-local lasthelperalpha = 0
 
 local lerp = Lerp
 -- local arcticcolor = Color(255, 255, 255, 100)
@@ -43,7 +42,8 @@ local ARC9ScreenScale = ARC9.ScreenScale
 local arc9_crosshair_target = GetConVar("arc9_crosshair_target")
 
 function SWEP:DoDrawCrosshair(x, y)
-    if !arc9_cross_enable:GetBool() then return end
+    if not arc9_cross_enable:GetBool() then return end
+    if not self:ShouldDrawCrosshair() then return true end
 
     if string.find(self:GetIKAnimation() or "", "inspect") and self:StillWaiting() then lasthelperalpha = 0 return true end
     
@@ -85,24 +85,6 @@ function SWEP:DoDrawCrosshair(x, y)
     local miniprong_2 = ARC9ScreenScale(2) * m * sizeprong
     local gap = 0
     local staticgap = ARC9ScreenScale(4)
-
-    -- local col = Color(255, 255, 255, 255)
-    -- col.r = arc9_cross_r:GetFloat()
-    -- col.g = arc9_cross_g:GetFloat()
-    -- col.b = arc9_cross_b:GetFloat()
-    -- col.a =  arc9_cross_a:GetFloat()
-
-	if owner.ARC9_AATarget != nil and arc9_crosshair_target:GetBool() then
-		col = Color(255,0,0,255)
-	else
-		col = Color(255, 255, 255, 255)
-		col.r = arc9_cross_r:GetFloat()
-		col.g = arc9_cross_g:GetFloat()
-		col.b = arc9_cross_b:GetFloat()
-		col.a =  arc9_cross_a:GetFloat()
-	end
-		
-
     local d = self:GetSightDelta()
 
     prong = lerp(d, prong, ARC9ScreenScale(6))
@@ -111,44 +93,14 @@ function SWEP:DoDrawCrosshair(x, y)
     miniprong_1 = lerp(d, miniprong_1, ARC9ScreenScale(3))
     miniprong_2 = lerp(d, miniprong_2, ARC9ScreenScale(1))
 
-    local helpertarget = 0
-
-    col.a = lasthelperalpha * col.a
-
-    if owner:IsAdmin() and arc9_dev_crosshair:GetBool() then
-        self:DevStuffCrosshair()
-        return true
-    end
-
-    if !self:ShouldDrawCrosshair() then
-        --[[]
-        if owner:KeyDown(IN_USE) then
-            helpertarget = 1
-        end
-        ]]
-
-        lasthelperalpha = math.Approach(lasthelperalpha, helpertarget, FrameTime() / 0.1)
-
-        drawshadowrect(x - (dotsize / 2), y - (dotsize / 2), dotsize, dotsize, col)
-
-        return true
-    else
-        helpertarget = 1
-
-        lasthelperalpha = math.Approach(lasthelperalpha, helpertarget, FrameTime() / 0.1)
-    end
-
     local mode = self:GetCurrentFiremode()
-
-    local shoottimegap = math.Clamp((self:GetNextPrimaryFire() - CurTime()) / (60 / (self:GetProcessedValue("RPM", true) * 0.1)), 0, 1)
+    local shoottimegap = math.Clamp((self:GetNextPrimaryFire() - CurTime()) / (60 / (self:GetValue("RPM") * 0.1)), 0, 1)
 
     shoottimegap = math.ease.OutCirc(shoottimegap)
 
     if staticcs then shoottimegap = 0 end
 
-    cam.Start3D()
-        local lool = ( EyePos() + ( EyeAngles():Forward() ) + ( (self:GetProcessedValue("Spread")) * EyeAngles():Up() ) ):ToScreen()
-    cam.End3D()
+    local lool = ( EyePos() + ( EyeAngles():Forward() ) + ( (self.Spread) * EyeAngles():Up() ) ):ToScreen()
 
     local gau = 0
     gau = ( (scrh / 2) - lool.y )
@@ -167,40 +119,7 @@ function SWEP:DoDrawCrosshair(x, y)
     if self:GetSprintAmount() > 0 then return true end
     if self:GetReloading() then return true end
 
-    local forcestd = self:GetProcessedValue("ForceStandardCrosshair", true)
-
-    if self:GetProcessedValue("MissileCrosshair", true) then
-        -- local dotcount = 4
-
-        -- for i = 1, dotcount do
-        --     local rad = i * math.pi * 2 / dotcount
-        --     rad = rad - (math.pi / 4)
-        --     local cx = math.cos(rad)
-        --     local cy = math.sin(rad)
-
-        --     cx = cx * gap * 3
-        --     cy = cy * gap * 3
-
-        --     drawshadowrect(x + cx - (dotsize / 2), y + cy - (dotsize / 2), dotsize, dotsize, col)
-        -- end
-
-        drawshadowrect(x - gap * 2.75 - (dotsize / 2), y - gap * 2.75 - (dotsize / 2), dotsize, dotsize, col)
-        drawshadowrect(x + gap * 2.75 - (dotsize / 2), y - gap * 2.75 - (dotsize / 2), dotsize, dotsize, col)
-        drawshadowrect(x - gap * 2.75 - (dotsize / 2), y + gap * 2.75 - (dotsize / 2), dotsize, dotsize, col)
-        drawshadowrect(x + gap * 2.75 - (dotsize / 2), y + gap * 2.75 - (dotsize / 2), dotsize, dotsize, col)
-
-        drawshadowrect(x - gap * 2.75 - (dotsize / 2), y - gap * 2 - (dotsize / 2), dotsize, gap * 1, col)
-        drawshadowrect(x + gap * 2.75 - (dotsize / 2), y - gap * 2 - (dotsize / 2), dotsize, gap * 1, col)
-
-        drawshadowrect(x - gap * 2.75 - (dotsize / 2), y - gap * -1 - (dotsize / 2), dotsize, gap * 1, col)
-        drawshadowrect(x + gap * 2.75 - (dotsize / 2), y - gap * -1 - (dotsize / 2), dotsize, gap * 1, col)
-
-        drawshadowrect(x - gap * 2 - (dotsize / 2), y - gap * 2.75 - (dotsize / 2), gap * 1, dotsize, col)
-        drawshadowrect(x - gap * 2 - (dotsize / 2), y + gap * 2.75 - (dotsize / 2), gap * 1, dotsize, col)
-
-        drawshadowrect(x - gap * -1 - (dotsize / 2), y - gap * 2.75 - (dotsize / 2), gap * 1, dotsize, col)
-        drawshadowrect(x - gap * -1 - (dotsize / 2), y + gap * 2.75 - (dotsize / 2), gap * 1, dotsize, col)
-    elseif (self:GetProcessedValue("ShootEnt", true) or self:GetProcessedValue("LauncherCrosshair", true)) and !forcestd then
+    if (self:GetProcessedValue("ShootEnt", true)) then
         if mode > 1 then
             drawshadowrect(x - (dotsize / 2) - gap - miniprong_2, y - (dotsize / 2), miniprong_2, dotsize, col)
             drawshadowrect(x - (dotsize / 2) - gap - miniprong_2 - minigap - miniprong_1, y - (dotsize / 2), miniprong_1, dotsize, col)
@@ -234,7 +153,7 @@ function SWEP:DoDrawCrosshair(x, y)
 
         drawshadowrect(x - (dotsize / 2) - (minigap * 2), y - (dotsize / 2) + gap + (staticgap * 5.5), dotsize, dotsize, col)
         drawshadowrect(x - (dotsize / 2) + (minigap * 2), y - (dotsize / 2) + gap + (staticgap * 5.5), dotsize, dotsize, col)
-    elseif self:GetProcessedValue("Num", true) > 1 and !forcestd then
+    elseif self:GetValue("Num") > 1 then
         local dotcount = 10
 
         for i = 1, dotcount do
@@ -264,7 +183,7 @@ function SWEP:DoDrawCrosshair(x, y)
                 drawshadowrect(x - (dotsize / 2), y - (dotsize / 2) - gap - miniprong_2, dotsize, miniprong_2, col)
                 drawshadowrect(x - (dotsize / 2), y - (dotsize / 2) - gap - miniprong_2 - minigap - miniprong_1, dotsize, miniprong_1, col)
             end
-        elseif mode != 0 then
+        elseif mode ~= 0 then
             drawshadowrect(x - (dotsize / 2) - gap - prong, y - (dotsize / 2), prong, dotsize, col)
             drawshadowrect(x + (dotsize / 2) + gap, y - (dotsize / 2), prong, dotsize, col)
             drawshadowrect(x - (dotsize / 2), y + (dotsize / 2) + gap, dotsize, prong, col)

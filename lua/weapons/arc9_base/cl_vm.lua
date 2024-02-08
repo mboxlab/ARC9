@@ -32,10 +32,11 @@ local arc9_dev_benchgun = GetConVar("arc9_dev_benchgun")
 local arc9_fx_adsblur = GetConVar("arc9_fx_adsblur")
 
 
-function SWEP:PreDrawViewModel()
+function SWEP:PreDrawViewModel(vm)
+    
     if ARC9.RTScopeRender then -- basically a copy of code in that func for rt barrels but without useless stuff and bad stuff, and also offset of cam in scope
         self:DoBodygroups(false)
-        local vm = self:GetVM()
+        -- local vm = self:GetVM()
         if self.HasSightsPoseparam then
             vm:SetPoseParameter("sights", self:GetSightAmount())
         end
@@ -129,7 +130,7 @@ function SWEP:PreDrawViewModel()
     self:DoBodygroups(false)
 
     local bipodamount = self:GetBipodAmount()
-    local vm = self:GetVM()
+    -- local vm = self:GetVM()
 
     if self.HasSightsPoseparam then
         vm:SetPoseParameter("sights", math.max(sightamount, bipodamount, custdelta))
@@ -191,7 +192,6 @@ function SWEP:ViewModelDrawn()
     self:DrawCustomModel(false)
     cam.IgnoreZ(true)
     self:DoRHIK()
-    if ARC9.RTScopeRender then return end
     self:PreDrawThirdArm()
     self:DrawFlashlightsVM()
 
@@ -203,7 +203,6 @@ function SWEP:ViewModelDrawn()
 end
 
 function SWEP:PostDrawViewModel()
-    local inrt = ARC9.RTScopeRender
 
     local newmzpcfs = {}
 
@@ -213,8 +212,7 @@ function SWEP:PostDrawViewModel()
             table.insert(newmzpcfs, pcf)
         end
     end
-
-    if !inrt then self.MuzzPCFs = newmzpcfs end
+    self.MuzzPCFs = newmzpcfs
 
     cam.Start3D()
         cam.IgnoreZ(false)
@@ -227,7 +225,7 @@ function SWEP:PostDrawViewModel()
             end
         end
 
-        if !inrt then self.PCFs = newpcfs end
+        self.PCFs = newpcfs
 
         local newfx = {}
 
@@ -239,7 +237,7 @@ function SWEP:PostDrawViewModel()
             end
         end
 
-        if !inrt then self.ActiveEffects = newfx end
+        self.ActiveEffects = newfx
     cam.End3D()
 
     if ARC9.PresetCam then return end
@@ -247,22 +245,18 @@ function SWEP:PostDrawViewModel()
     cam.IgnoreZ(false)
     render.SetBlend(1)
 
-    if !arc9_dev_benchgun:GetBool() then
-        cam.End3D()
-    end
-
-    if inrt then return end
+    cam.End3D()
 
     cam.Start3D(nil, nil, self:WidescreenFix(self:GetViewModelFOV()), nil, nil, nil, nil, 1, 10000)
     if self.VModel then
+        local GetFinalAttTable = self.GetFinalAttTable
+        local DoHolosight = self.DoHolosight
         for _, model in ipairs(self.VModel) do
             local slottbl = model.slottbl
-            local atttbl = self:GetFinalAttTable(slottbl)
+            local atttbl = GetFinalAttTable(self, slottbl)
 
             if atttbl.HoloSight then
-                -- cam.IgnoreZ(true)
-                self:DoHolosight(model, atttbl)
-                -- cam.IgnoreZ(false)
+                DoHolosight(self, model, atttbl)
             end
         end
     end

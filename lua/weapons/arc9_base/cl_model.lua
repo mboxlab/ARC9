@@ -52,11 +52,7 @@ function SWEP:GetAttachmentPos(slottbl, wm, idle, nomodeloffset, custompos, cust
     local atttbl = {}
 
     if slottbl.WMBase then
-        bone = (self:ShouldTPIK() and self.TPIKParentToSpine4) and "ValveBiped.Bip01_Spine4" or "ValveBiped.Bip01_R_Hand"
-
-        -- if self:ShouldTPIK() then
-        --     bone = "ValveBiped.Bip01_Head1"
-        -- end
+        bone = "ValveBiped.Bip01_R_Hand"
     end
 
     if slottbl.Installed then
@@ -376,8 +372,6 @@ function SWEP:SetupModel(wm, lod, cm)
 
         csmodel:SetNoDraw(true)
         csmodel.atttbl = {}
-
-        local shouldtpik = self:ShouldTPIK()
         
         if cm then
             csmodel.slottbl = {
@@ -388,8 +382,8 @@ function SWEP:SetupModel(wm, lod, cm)
         else
             csmodel.slottbl = {
                 WMBase = true,
-                Pos = (shouldtpik and self.WorldModelOffset.TPIKPos) or self.WorldModelOffset.Pos or Vector(0, 0, 0),
-                Ang = (shouldtpik and self.WorldModelOffset.TPIKAng) or self.WorldModelOffset.Ang or Angle(-5, 0, 180)
+                Pos = self.WorldModelOffset.Pos or Vector(0, 0, 0),
+                Ang = self.WorldModelOffset.Ang or Angle(-5, 0, 180)
             }
         end
 

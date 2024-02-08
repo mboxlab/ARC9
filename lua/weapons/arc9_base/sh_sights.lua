@@ -290,8 +290,9 @@ do
         end
 
         local oldamt = swepDt.SightAmount
+        
         local amt = math.Approach(
-            oldamt, sighted and 1 or 0, FrameTime() / self:GetProcessedValue("AimDownSightsTime"))
+            oldamt, sighted and 1 or 0, FrameTime() / self.AimDownSightsTime)
 
         if oldamt ~= amt then
             self:SetSightAmount(amt)

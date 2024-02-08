@@ -27,7 +27,7 @@ do
         if (self.NearWallLastCheck or 0) > now then return self.NearWallCached end
         self.NearWallLastCheck = now + 8 -- 8 ticks before next check
 
-        local length = self:GetProcessedValue("BarrelLength", true)
+        local length = self.BarrelLength + self.BarrelLength / 10
 
         if length == 0 then return false end
 
