@@ -197,3 +197,34 @@ function SWEP:MeleeAttackShoot(bash2, backstab)
     self:SetInMeleeAttack(false)
     self:SetLungeEntity(NULL)
 end
+
+function SWEP:ThinkMelee()	
+    local owner = self:GetOwner()	
+
+    local prebash = self:GetProcessedValue("PreBashTime") / self:GetProcessedValue("BashSpeed")	
+
+    if self:GetBash2() then	
+        prebash = self:GetProcessedValue("PreBash2Time")	
+    end	
+
+    if !self:GetGrenadePrimed() then	
+		waituntilbashagain = self:GetLastMeleeTime() + prebash + self:GetProcessedValue("PostBashTime") <= CurTime()	
+
+        if owner:KeyDown(IN_ATTACK) and self:GetProcessedValue("PrimaryBash", true) and waituntilbashagain then	
+            self:MeleeAttack()	
+        end	
+
+        if owner:KeyDown(IN_ATTACK2) and self:GetProcessedValue("SecondaryBash", true) and waituntilbashagain then	
+            self:MeleeAttack()	
+        end	
+
+        if owner:KeyDown(ARC9.IN_MELEE) and self:GetProcessedValue("Bash", true) and !self:GetInSights() and waituntilbashagain then	
+            self:MeleeAttack()	
+        end	
+
+    end	
+
+    if self:GetInMeleeAttack() and self:GetLastMeleeTime() + prebash <= CurTime() then	
+        self:MeleeAttackShoot(self:GetBash2(), false)	
+    end	
+end
